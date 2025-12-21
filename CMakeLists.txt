@@ -4,6 +4,7 @@ project(LR8)
 set(CMAKE_CXX_STANDARD 20)
 
 add_subdirectory(Task_1)
+add_subdirectory(Task_2)
 
 if(MSVC)
     add_compile_options(/utf-8)
