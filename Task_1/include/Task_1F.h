@@ -1,52 +1,36 @@
-#ifndef LR8_TASK_1F_H
-#define LR8_TASK_1F_H
+#ifndef TASK_1F_H
+#define TASK_1F_H
 
-const int MAX_NAME = 50;
-const int MAX_DATE = 20;
+#include <iostream>
+#include <fstream>
+#include <cstring>
+#include <iomanip>
+#include <limits>
 
-union ProductID {
-    int code;
-    char serial[30];
+// выбор между весом и объемом
+union ProductSpec {
+    double volume;
+    double weight;
 };
 
-struct Product {
-    char name[MAX_NAME];
+// основная инфа про товар
+struct FactoryProduct {
+    char name[50];
     int quantity;
-    int workshop;
-    char date[MAX_DATE];
-    ProductID id;
-    int id_type; // 1-код, 2-серийный
+    int workshop_num;
+    double unit_price;
+    double batch_value;
+    int spec_type;
+    ProductSpec spec;
 };
 
-class ProductArray {
-private:
-    Product* data;
-    int size;
-    int capacity;
+// список всех функций для работы с данными
+FactoryProduct* createArray(int& size);
+void displayArray(FactoryProduct* arr, int size);
+void addElement(FactoryProduct*& arr, int& size);
+void deleteElement(FactoryProduct*& arr, int& size);
+void searchByWorkshop(FactoryProduct* arr, int size);
+void shakerSort(FactoryProduct* arr, int size);
+void modifyInFile(const char* filename);
 
-    void expand(); // Увеличивает массив
-
-public:
-    ProductArray();
-    ~ProductArray();
-
-    void add(const Product& p);
-    void remove(int index);
-    void clear();
-
-    int getSize() const { return size; }
-    Product* getData() { return data; }
-};
-
-void inputProducts(ProductArray& arr);
-void printAll(const ProductArray& arr);
-void addMore(ProductArray& arr);
-void findWorkshop(const ProductArray& arr);
-void removeProduct(ProductArray& arr);
-void editProduct(ProductArray& arr);
-void shakerSort(ProductArray& arr);
-void saveToFile(const ProductArray& arr);
-void loadFromFile(ProductArray& arr);
-void editInFile();
-
-#endif //LR8_TASK_1F_H
+#endif
