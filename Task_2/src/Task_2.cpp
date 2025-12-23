@@ -17,7 +17,6 @@ int main() {
             continue;
         }
 
-        // consume the newline after choice input
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         switch (choice) {
