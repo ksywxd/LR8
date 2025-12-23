@@ -23,6 +23,7 @@ struct LibraryBook {
 };
 
 LibraryBook* createLibrary(int& size);
+double getPositiveNum();
 void displayLibrary(LibraryBook* arr, int size);
 void addBook(LibraryBook*& arr, int& size);
 void deleteBook(LibraryBook*& arr, int& size);

@@ -39,7 +39,6 @@ int main() {
             break;
 
         case 3:
-            // передаем по ссылке, чтобы адрес внутри main обновился
             addElement(catalog, size);
             break;
 
@@ -68,6 +67,7 @@ int main() {
                 // ios::trunc перезаписывает файл заново
                 ofstream ofs(filename, ios::binary | ios::trunc);
                 if (ofs.is_open()) {
+                    //количество товаров × размер одного товара в байтах
                     ofs.write((char*)catalog, size * sizeof(FactoryProduct));
                     ofs.close();
                     cout << "Success: Data saved to " << filename << endl;
