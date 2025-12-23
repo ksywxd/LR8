@@ -1,65 +1,90 @@
 #include "Task_1F.h"
+#include <iostream>
+#include <fstream>
+#include <limits>
+
 using namespace std;
 
 int main() {
-    FactoryProduct* catalog = nullptr; // тут лежит наш массив
-    int size = 0; // текущее количество элементов
+    FactoryProduct* catalog = nullptr;
+    int size = 0;
     int choice;
-    const char* filename = "factory.dat"; // имя файла для сохранения
+    const char* filename = "factory.dat";
 
     while (true)
     {
-        // главное меню программы
-        cout << "\n1. Create\t2. Show\t\t3. Add\t\t4. Workshop Qty\n5. Delete\t6. FileMod\t7. Sort\t\t8. Save\t\t0. Exit" << endl;
-        cout << "Choice: ";
+        cout << "1. Create List\t\t2. Show Catalog" << endl;
+        cout << "3. Add Product\t\t4. Total Workshop Qty" << endl;
+        cout << "5. Delete Product\t6. Modify in File" << endl;
+        cout << "7. Shaker Sort (Qty)\t8. Save to File" << endl;
+        cout << "0. Exit" << endl;
+        cout << "Your Choice: ";
 
-        // проверка чтобы не ввели буквы вместо цифр
-        if (!(cin >> choice)) {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            continue;
-        }
+        // Используем getPositiveNum для выбора меню, чтобы очистить буфер
+        choice = (int)getPositiveNum();
 
         switch (choice) {
         case 1:
+            // Если массив уже существует, удаляем его перед созданием нового
+            if (catalog) {
+                delete[] catalog;
+                catalog = nullptr;
+                size = 0;
+            }
             catalog = createArray(size);
             break;
+
         case 2:
             displayArray(catalog, size);
             break;
+
         case 3:
+            // передаем по ссылке, чтобы адрес внутри main обновился
             addElement(catalog, size);
             break;
+
         case 4:
             searchByWorkshop(catalog, size);
             break;
+
         case 5:
             deleteElement(catalog, size);
             break;
+
         case 6:
             modifyInFile(filename);
             break;
+
         case 7:
             shakerSort(catalog, size);
+            cout << "Sorted by Quantity (Descending):" << endl;
             displayArray(catalog, size);
             break;
+
         case 8: {
-            // сохраняем массив в бинарный файл
-            ofstream ofs(filename, ios::binary | ios::trunc);
-            if (ofs.is_open()) {
-                ofs.write((char*)catalog, size * sizeof(FactoryProduct));
-                cout << "Data saved to " << filename << endl;
+            if (!catalog || size == 0) {
+                cout << "Error: Nothing to save. Create list first." << endl;
+            } else {
+                // ios::trunc перезаписывает файл заново
+                ofstream ofs(filename, ios::binary | ios::trunc);
+                if (ofs.is_open()) {
+                    ofs.write((char*)catalog, size * sizeof(FactoryProduct));
+                    ofs.close();
+                    cout << "Success: Data saved to " << filename << endl;
+                } else {
+                    cout << "File error: Could not open file for writing." << endl;
+                }
             }
             break;
         }
+
         case 0:
-            // выход из программы
-            cout << "Exiting..." << endl;
-            if (catalog) delete[] catalog; // чистим память перед самым выходом
-            return 0; // вот теперь программа закроется
+            cout << "Exiting program..." << endl;
+            if (catalog) delete[] catalog;
+            return 0;
+
         default:
-            // если ввели число которого нет в меню
-            cout << "No such choice" << endl;
+            cout << "Invalid choice. Please try again." << endl;
             break;
         }
     }

@@ -13,7 +13,6 @@ union ProductSpec {
     double weight;
 };
 
-// основная инфа про товар
 struct FactoryProduct {
     char name[50];
     int quantity;
@@ -24,8 +23,8 @@ struct FactoryProduct {
     ProductSpec spec;
 };
 
-// список всех функций для работы с данными
 FactoryProduct* createArray(int& size);
+double getPositiveNum();
 void displayArray(FactoryProduct* arr, int size);
 void addElement(FactoryProduct*& arr, int& size);
 void deleteElement(FactoryProduct*& arr, int& size);

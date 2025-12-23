@@ -5,7 +5,11 @@ using namespace std;
 double getPositiveNum() {
     double val;
     while (true) {
-        if (cin >> val && val >= 0) return val;
+        if (cin >> val && val >= 0)
+        {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return val;
+        }
         cout << "Error! Please enter a positive number: ";
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -21,16 +25,20 @@ FactoryProduct* createArray(int& size) {
     FactoryProduct* arr = new FactoryProduct[size];
     for (int i = 0; i < size; i++) {
         cout << "\n   Product " << i + 1 << endl;
+
         cout << "Name (EN): ";
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         cin.getline(arr[i].name, 50);
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
 
         cout << "Qty: "; arr[i].quantity = (int)getPositiveNum();
         cout << "Workshop: "; arr[i].workshop_num = (int)getPositiveNum();
         cout << "Price: "; arr[i].unit_price = getPositiveNum();
         arr[i].batch_value = arr[i].quantity * arr[i].unit_price;
 
-        // выбираем литры или килограммы
+        // л или кг
         do {
             cout << "Type (1-Vol, 2-Weight): ";
             arr[i].spec_type = (int)getPositiveNum();
@@ -47,7 +55,7 @@ void displayArray(FactoryProduct* arr, int size) {
     if (!arr || size == 0) { cout << "\nList is empty." << endl; return; }
     cout << "\nID\tName\tQty\tShop\tPrice\tTotal\tSpec" << endl;
     for (int i = 0; i < size; i++) {
-        cout << i + 1 << ".\t" << arr[i].name << "\t" << arr[i].quantity << "\t"
+        cout << i << ".\t" << arr[i].name << "\t" << arr[i].quantity << "\t"
              << arr[i].workshop_num << "\t" << arr[i].unit_price << "\t"
              << arr[i].batch_value << "\t";
         if (arr[i].spec_type == 1) cout << arr[i].spec.volume << "L";
@@ -62,9 +70,13 @@ void addElement(FactoryProduct*& arr, int& size) {
     for (int i = 0; i < size; i++) newArr[i] = arr[i];
 
     cout << "\n   Adding product" << endl;
+
     cout << "Name (EN): ";
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     cin.getline(newArr[size].name, 50);
+    if (cin.fail()) {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
 
     cout << "Qty: "; newArr[size].quantity = (int)getPositiveNum();
     cout << "Shop: "; newArr[size].workshop_num = (int)getPositiveNum();
@@ -106,8 +118,11 @@ void deleteElement(FactoryProduct*& arr, int& size) {
     if (size == 0) return;
     char target[50];
     cout << "Enter name to delete: ";
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     cin.getline(target, 50);
+    if (cin.fail()) {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
 
     int idx = -1;
     for (int i = 0; i < size; i++) {
@@ -145,7 +160,7 @@ void shakerSort(FactoryProduct* arr, int size) {
     }
 }
 
-// изменение количества товара прямо в бинарном файле
+// изменение количества товара в бинарном файле
 void modifyInFile(const char* filename) {
     fstream fs(filename, ios::binary | ios::in | ios::out);
     if (!fs) { cout << "File error! Save data first." << endl; return; }
@@ -153,7 +168,7 @@ void modifyInFile(const char* filename) {
     int index = (int)getPositiveNum();
 
     fs.seekg(index * sizeof(FactoryProduct), ios::beg);
-    FactoryProduct temp;
+    FactoryProduct temp{};
     if (!fs.read((char*)&temp, sizeof(FactoryProduct))) {
         cout << "Record not found." << endl;
         return;
