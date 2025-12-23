@@ -20,7 +20,6 @@ int main() {
         cout << "0. Exit" << endl;
         cout << "Your Choice: ";
 
-        // Используем getPositiveNum для выбора меню, чтобы очистить буфер
         choice = (int)getPositiveNum();
 
         switch (choice) {

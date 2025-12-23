@@ -15,7 +15,11 @@ int main() {
 
         switch (choice) {
         case 1:
-            if (lib) delete[] lib;
+            if (lib) {
+                delete[] lib;
+                lib = nullptr;
+                size = 0;
+            }
             lib = createLibrary(size);
             break;
         case 2:
